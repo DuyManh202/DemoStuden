@@ -1,0 +1,63 @@
+﻿@model IEnumerable<DemoStuden.Models.Studens>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<form asp-action="Index" method="get">
+    <div class="form-group">
+        <label for="search">Search by Name:</label>
+        <input type="text" class="form-control" id="search" name="search" value="@ViewBag.SearchString" />
+    </div>
+    <div class="form-group">
+        <label for="filter">Filter by Class:</label>
+        <select class="form-control" id="filter" name="filter">
+            <option value="">All</option>
+            <option value="ClassA">Class A</option>
+            <option value="ClassB">Class B</option>
+            <option value="ClassC">Class C</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th><a href="@Url.Action("Index", new { sortOrder = ViewBag.NameSortParm })">Name</a></th>
+            <th><a href="@Url.Action("Index", new { sortOrder = ViewBag.AgeSortParm })">Age</a></th>
+            <th>Class</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model)
+        {
+            <tr>
+                <td>@student.Id</td>
+                <td>@student.Name</td>
+                <td>@student.Age</td>
+                <td>@student.Class</td>
+                <td><a href="@Url.Action("Edit", new { id = student.Id })">Edit</a></td>
+                <td><a href="@Url.Action("Delete", new { id = student.Id })">Delete</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <ul class="pagination">
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                <a class="page-link" href="@Url.Action("Index", new { page = i, search = ViewBag.SearchString, filter = ViewBag.Filter })">@i</a>
+            </li>
+        }
+    </ul>
+</div>
+
+<a href="@Url.Action("Create")">Create New Student</a>
